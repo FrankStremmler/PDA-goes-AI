@@ -1,0 +1,9 @@
+.env
+.secret
+.userdata
+.venv
+.vscode
+__pycache__/
+*.pyc
+*.pyo
+config/token.json
