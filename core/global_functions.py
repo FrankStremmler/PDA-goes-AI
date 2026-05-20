@@ -10,6 +10,7 @@ import os
 def get_file_type(file_path: str) -> str:
     """
     Get the file type of a given file path.
+    Knowing the filetype can be used to determine how to handle the file, maybe upload the file as is to the AI or convert to Base64.
     Args:
         file_path (str): The path to the file.
     Returns:
@@ -23,6 +24,7 @@ def get_file_type(file_path: str) -> str:
             return 'unknown'
     except Exception as e:
         raise FileNotFoundError(f"Error determining file type for {file_path}") from e
+
 
 def encode_file_to_base64(file_path: str) -> str:
     """

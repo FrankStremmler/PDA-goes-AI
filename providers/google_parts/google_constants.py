@@ -26,4 +26,4 @@ GOOGLE_SCOPES = [
     'https://www.googleapis.com/auth/drive'
     ]
 
-CONFIG_PATH = 'config'
+CONFIG_PATH = '.secret'

@@ -8,17 +8,20 @@ um den nächsten Termin aus dem Google Kalender abzurufen und anzuzeigen.
 import datetime
 from zoneinfo import ZoneInfo
 from core.calendar_all import CalendarEvent, CalendarType
+from providers.google_parts import drive_google
+
 #from google_parts_FST import google_base
 
 import core.global_functions as global_functions
 
-print("teste filetype:")
-try:
-    print(global_functions.get_file_type("assets/images/Kassenzettel/Nr0001.jpg"))
-    base64_str = global_functions.encode_file_to_base64("assets/images/Kassenzettel/Nr0001.jpg")
-    print(base64_str[:30] if base64_str else "Failed to encode file to base64")
-except FileNotFoundError as e:
-    print(f"Error: {e}")
+# print("teste filetype:")
+# try:
+#     print(global_functions.get_file_type("assets/images/Kassenzettel/Nr0001.jpg"))
+#     base64_str = global_functions.encode_file_to_base64("assets/images/Kassenzettel/Nr0001.jpg")
+#     print(base64_str[:30] if base64_str else "Failed to encode file to base64")
+# except FileNotFoundError as e:
+#     print(f"Error: {e}")
+drive_google.main()
 
 def create_event_text(event)-> str:
     startzeit_utc = datetime.datetime.fromisoformat(event['start'].get('dateTime', event['start'].get('date')))

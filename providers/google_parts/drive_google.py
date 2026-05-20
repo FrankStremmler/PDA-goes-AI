@@ -2,6 +2,8 @@
 import os
 from providers.google_parts import google_constants as google_constants
 from providers.google_parts import google_base as google_base
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 # volle Berechtigung für Zugriff auf Google Drive API
 SCOPES = google_constants.GOOGLE_SCOPES
@@ -33,23 +35,7 @@ def list_files(service, folder_id='root'):
     return items
 
 def main():
-    # ... (Authentifizierungsteil wie im ersten Beispiel) ...
-    creds = None
-    # Token speichert den Login für den nächsten Start
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-
-    # Login, falls nötig
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-
-    service = build('drive', 'v3', credentials=creds)
+    service = google_base.create_service(google_base.AppType.DRIVE)
 
     current_folder = 'root'
     while True:

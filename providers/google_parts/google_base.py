@@ -19,14 +19,23 @@
 
 # eigene Module importieren
 import os as os
+from enum import Enum
+import core.global_functions as global_functions
 import providers.google_parts.google_constants as google_constants
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+
+class AppType(Enum):
+    CALENDAR = 'calendar'
+    CONTACTS = 'contacts'
+    DRIVE = 'drive'
 
 GOOGLE_SCOPES = google_constants.GOOGLE_SCOPES
 CREDENTIALS_FILE = os.path.join(google_constants.CONFIG_PATH, 'credentials.json')
 TOKEN_FILE = os.path.join(google_constants.CONFIG_PATH, 'token.json')
 
 # Standradfunktion für die Erstellung eines Dienstes, um mit der Google API zu kommunizieren.
-def create_service():
+def create_service(apptype: AppType = AppType.CALENDAR):
     '''
     Erstellt einen Dienst, um mit Google API's zu kommunizieren.
     Handhabt die Authentifizierung und Token-Verwaltung.
@@ -49,8 +58,17 @@ def create_service():
         with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
 
-    service = google_constants.build('calendar', 'v3', credentials=creds)
+    match apptype:
+        case AppType.CALENDAR:
+            service = google_constants.build('calendar', 'v3', credentials=creds)
+        case AppType.CONTACTS:
+            service = google_constants.build('contacts', 'v1', credentials=creds)
+        case AppType.DRIVE:
+            service = google_constants.build('drive', 'v3', credentials=creds)
+        case _:
+            raise ValueError(f"Unbekannter AppType: {apptype}")
     return service
+
 
 if __name__ == '__main__':
     pass
