@@ -2,7 +2,7 @@
 import os
 from providers.google_parts import google_constants as google_constants
 from providers.google_parts import google_base as google_base
-from google_auth_oauthlib.flow import InstalledAppFlow
+# from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 # volle Berechtigung für Zugriff auf Google Drive API
@@ -49,5 +49,22 @@ def main():
         elif choice:
             current_folder = choice
 
+def list_folders(service, folder_id='root'):
+    query = f"'{folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+    results = service.files().list(q=query, fields="files(id, name)").execute()
+    folders = [google_base.DriveFolders(**folder) for folder in results.get('files', [])]
+    return folders
+
+def list_files(service, folder_id='root'):
+    query = f"'{folder_id}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false"
+    results = service.files().list(q=query, fields="files(id, name)").execute()
+    return results.get('files', [])
+
+def list_all(service, folder_id='root'):
+    query = f"'{folder_id}' in parents and trashed = false"
+    results = service.files().list(q=query, fields="files(id, name, mimeType)").execute()
+    return results.get('files', [])
+
 if __name__ == '__main__':
-    main()
+    # main()
+    pass

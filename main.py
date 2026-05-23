@@ -10,8 +10,6 @@ from zoneinfo import ZoneInfo
 from core.calendar_all import CalendarEvent, CalendarType
 from providers.google_parts import drive_google
 
-#from google_parts_FST import google_base
-
 import core.global_functions as global_functions
 
 # print("teste filetype:")

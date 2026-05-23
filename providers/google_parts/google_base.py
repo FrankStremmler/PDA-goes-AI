@@ -23,12 +23,85 @@ from enum import Enum
 import core.global_functions as global_functions
 import providers.google_parts.google_constants as google_constants
 from google_auth_oauthlib.flow import InstalledAppFlow
+from pydantic import BaseModel, Field
 
 
 class AppType(Enum):
     CALENDAR = 'calendar'
     CONTACTS = 'contacts'
     DRIVE = 'drive'
+
+class DriveFolders(BaseModel):
+    # Klassen-Variable für das Autoincrement
+    _counter: int = 1
+
+    folder_id: str = Field(default=None)
+    id: str
+    name: str
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Wenn keine folder_id übergeben wurde, automatisch generieren
+        if not self.folder_id:
+            self.folder_id = f"fol_{DriveFolders._counter}"
+            DriveFolders._counter += 1
+
+
+class DriveFiles(BaseModel):
+    _counter: int = 1
+
+    file_id: str = Field(default=None)
+    id: str
+    name: str
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if not self.file_id:
+            self.file_id = f"fil_{DriveFiles._counter}"
+            DriveFiles._counter += 1
+
+# class DriveFiles(BaseModel):
+#     id_file: int
+#     name: str
+#     mimeType: str
+#     id_drive: str
+
+#     def __init__(self, id_file, name, mimeType, id_drive):
+#         super().__init__(id_file=id_file, name=name, mimeType=mimeType, id_drive=id_drive)
+
+# class DriveFolders(BaseModel):
+#     id_folder: int
+#     name: str
+#     id_drive: str
+
+#     def __init__(self, id_folder, name, id_drive):
+#         super().__init__(id_folder=id_folder, name=name, id_drive=id_drive)
+
+    # @property
+    # def id(self):
+    #     return self['id']
+    # @setter
+    # def id(self, value):
+    #     self['id'] = value
+
+    # @property
+    # def name(self):
+    #     return self['name']
+    # @setter
+    # def name(self, value):
+    #     self['name'] = value
+
+    # @property
+    # def mimeType(self):
+    #     return self['mimeType']
+    # @setter
+    # def mimeType(self, value):
+    #     self['mimeType'] = value
+
+    # @property # read-only, so not setter
+    # def drive_id(self):
+    #     return self['drive_id']
+
 
 GOOGLE_SCOPES = google_constants.GOOGLE_SCOPES
 CREDENTIALS_FILE = os.path.join(google_constants.CONFIG_PATH, 'credentials.json')
